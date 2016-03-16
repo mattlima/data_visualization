@@ -1,0 +1,38 @@
+.step.step-2{
+  height:90vh;
+  width:100vw;
+  position:absolute;
+  bottom:0;
+}
+
+.trump-container{
+  position:absolute;
+  bottom:0;
+  height:100vh;
+  width:100vw;
+
+  .trump{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width:60%;
+    height:100%;
+    img{
+      width:100%;
+      position:absolute;
+      bottom:0;
+    }
+  }
+
+  .trump-jaw{
+    position: absolute;
+    bottom: 35.5%;
+    left: 19.6%;
+    width: 11.5%;
+    img{
+      width:100%;
+      position: absolute;
+      top:0;
+    }
+  }
+}

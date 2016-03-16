@@ -1,0 +1,17 @@
+
+body{
+	background-color: #cc3608;
+
+	html.wf-loading &{
+  	opacity:0;
+	}
+
+}
+
+
+div.steps .step{
+  display:none;
+  &.active{
+    display:inherit;
+  }
+}
