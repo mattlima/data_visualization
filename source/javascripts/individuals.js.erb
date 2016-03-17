@@ -1,0 +1,12 @@
+var individuals = <%= data.individuals_in_shelters.to_json %>;
+<%
+
+  min = data.individuals_in_shelters.min
+  max = data.individuals_in_shelters.max
+
+  ind_perc = data.individuals_in_shelters.map{ |i|
+      #(i - data.individuals_in_shelters.min) / data.individuals_in_shelters.max
+      ((i-min).to_f / (max-min)).round(4)
+  }
+  %>
+var individuals_perc =  <%= ind_perc.to_json %>;
