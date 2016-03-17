@@ -2,3 +2,22 @@
 @import 'partials/global';
 @import 'partials/typography';
 @import 'partials/step2';
+
+i {
+	display:block;
+	position: absolute;
+	border: 1px solid white;
+	border-radius: 10px;
+	top: 0;
+	left: 0;
+	 // -webkit-transition: border-width .25s, border-radius .25s, top .25s, left .25s;
+  // transition: border-width .25s, border-radius .25s, top .25s, left .25s
+  
+  
+}
+
+i.tracker {
+	transition: all .125s;
+	// border-color: green;
+	// z-index: 99999;
+}
