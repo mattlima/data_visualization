@@ -22,5 +22,6 @@
     "stemkowski.github.com": "git@github.com:stemkoski/stemkoski.github.com.git",
     "mooog": "*",
     "three.js": "git@github.com:mrdoob/three.js.git#2541ba0645dac4084630c7e7e29235e13ef31d4b"
+    "imagesloaded": "~4.1.0"
   }
 }
