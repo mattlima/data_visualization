@@ -72,6 +72,8 @@ configure :build do
   # Enable cache buster
   # activate :asset_hash
 
+  ignore "bower_components/*"
+
   # Use relative URLs
   # activate :relative_assets
 
