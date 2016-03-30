@@ -1,0 +1,18 @@
+---
+title: Three JS test 3
+layout: plain
+---
+<% content_for :scripts do %>
+
+<%= javascript_include_tag "three_earth_test" %>
+
+<% end %>
+
+<div id="Stats-output"></div>
+<!-- Div which will hold the Output -->
+<div id="ThreeJS">
+</div>
+
+<!-- Javascript code that runs our Three.js examples -->
+
+<%= javascript_include_tag "three_earth_test_on_page" %>
