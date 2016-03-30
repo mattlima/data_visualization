@@ -74,9 +74,13 @@ class ImageStack
       sprite.texture = new PIXI.Texture.fromImage "/img/a#{i}.jpg"
       sprite.width = @STAGE_WIDTH
       sprite.height = @STAGE_HEIGHT
+      sprite.alpha = 0.075
       @stage.addChild sprite
       @sprites.push sprite
 
+    @currentSprite = 0
+    @frame = 0
+    @doEvery = 10 # we will do a sprite swap every so many frames
     @render()
 
 
@@ -84,13 +88,17 @@ class ImageStack
   # the fat arrow syntax ()=> defines a function and locks 'this' to the current context
   # the render function runs every frame
   render: ()=>
+    @frame += 1
     #this prepares the launch of the render function for the next frame
     requestAnimationFrame @render
-    #this sets a random opacity for each sprite in the stack on every frame
-    sprite.alpha = Math.random() for sprite in @sprites
 
-    #this renders the PIXI stage to the canvas
-    @pixi.r.render @stage
+    unless @frame % @doEvery # this is a trick for doing something every X frames
+      @stage.removeChild @sprites[@currentSprite]
+      @stage.addChild @sprites[@currentSprite]
+      @currentSprite += 1
+      @currentSprite = 0 if @currentSprite is @sprites.length
+      #this renders the PIXI stage to the canvas
+      @pixi.r.render @stage
 
 
 
