@@ -15,6 +15,9 @@
 #= require 'three.js/examples/js/postprocessing/EffectComposer.js'
 
 #= require 'three.js/examples/js/postprocessing/MaskPass.js'
+
+#= require 'three.js/examples/js/renderers/Projector.js'
+
 #= require 'BKCore_GodRayShader.js'
 
 
@@ -41,28 +44,31 @@ class Viz
 
 
   init: ()->
+    @rendererWidth = window.innerWidth / 2
+    @rendererHeight = window.innerHeight * 0.85
     @clock = new THREE.Clock()
     @scene = new THREE.Scene()
     @occlusionScene = new THREE.Scene()
 
-    @camera = new THREE.PerspectiveCamera 75, (window.innerWidth/2) / window.innerHeight, 0.1, 1000
+    @camera = new THREE.PerspectiveCamera 75, @rendererWidth / @rendererHeight, 0.1, 1000
     @scene.add @camera
-    @occlusionCamera = new THREE.PerspectiveCamera 75, (window.innerWidth/2) / window.innerHeight, 0.1, 1000
+    @occlusionCamera = new THREE.PerspectiveCamera 75, (@rendererWidth) / @rendererHeight, 0.1, 1000
     @occlusionScene.add @occlusionCamera
 
     @renderer = new THREE.WebGLRenderer
       antialias: true
-    @renderer.setSize( window.innerWidth/2, window.innerHeight )
-    @renderer.setClearColor( new THREE.Color(0x000, 1.0) )
-    @renderer.shadowMap.enabled = true
-    document.body.appendChild( @renderer.domElement )
+    @renderer.setSize( @rendererWidth, @rendererHeight )
 
     @renderer2 = new THREE.WebGLRenderer
       antialias: true
-    @renderer2.sortObjects = true
-    @renderer2.setSize( window.innerWidth/2, window.innerHeight )
+    @renderer2.setSize( @rendererWidth, @rendererHeight )
+
+    @renderer.setClearColor( new THREE.Color(0x000, 1.0) )
+    @renderer.shadowMap.enabled = true
+    document.body.appendChild( @renderer.domElement )
     document.body.appendChild( @renderer2.domElement )
-    #@renderer2 = @renderer
+
+
 
     controls = new THREE.OrbitControls @camera, @renderer.domElement
     controls.target = new THREE.Vector3(0, 0, 0);
@@ -95,43 +101,40 @@ class Viz
   render: ()=>
     delta = @clock.getDelta()
     requestAnimationFrame @render
-    #vLight.updateMatrixWorld() for vLight in @vLights
-    pos = THREE.Extras.Utils.projectOnScreen(@vLights[0], @occlusionCamera);
-#     console.log pos
+
+
     (@occlusionCamera.position[k] = @camera.position[k]) for k in ["x", "y", "z"]
     (@occlusionCamera.rotation[k] = @camera.rotation[k]) for k in ["x", "y", "z"]
 
-    @grPass.uniforms.fX.value = 0.5
-    @grPass.uniforms.fY.value = 0.5
+    #vLight.updateMatrixWorld() for vLight in @vLights
+    pos = new THREE.Vector3;
+    pos.setFromMatrixPosition( @vLights[0].matrixWorld );
+    pos.project @occlusionCamera;
+    @grPass.uniforms.fX.value = (pos.x + 1) / 2
+    @grPass.uniforms.fY.value = (pos.y + 1) / 2
+
 
 
 
     #@renderer.render @scene, @camera
-
-
-    #@renderer2.render @occlusionScene, @occlusionCamera
+    @renderer2.render @occlusionScene, @occlusionCamera
     @oclcomposer.render(delta)
     @finalcomposer.render(delta)
 
   setup_occlusion: ()->
 
-
-
-
-    SCREEN_WIDTH = window.innerWidth/2
-    SCREEN_HEIGHT = window.innerHeight
     #Prepare the occlusion composer's render target
     renderTargetParameters =
       minFilter: THREE.LinearFilter
       magFilter: THREE.LinearFilter
       format: THREE.RGBAFormat
       stencilBuffer: false
-    renderTargetOcl = new THREE.WebGLRenderTarget( SCREEN_WIDTH, SCREEN_HEIGHT, renderTargetParameters )
-    renderTarget2 = new THREE.WebGLRenderTarget( SCREEN_WIDTH, SCREEN_HEIGHT, renderTargetParameters )
-    renderTargetSave = new THREE.WebGLRenderTarget( SCREEN_WIDTH, SCREEN_HEIGHT, renderTargetParameters )
+    renderTargetOcl = new THREE.WebGLRenderTarget( @rendererWidth, @rendererHeight, renderTargetParameters )
+    renderTarget2 = new THREE.WebGLRenderTarget( @rendererWidth, @rendererHeight, renderTargetParameters )
+    renderTargetSave = new THREE.WebGLRenderTarget( @rendererWidth, @rendererHeight, renderTargetParameters )
 
     #prepare the composer
-    oclcomposer = new THREE.EffectComposer( @renderer2, renderTargetOcl )
+    oclcomposer = new THREE.EffectComposer( @renderer, renderTargetOcl )
 
     #Prepare and add the occlusion scene render pass
     renderModelOcl = new THREE.RenderPass( @occlusionScene, @occlusionCamera )
@@ -141,23 +144,24 @@ class Viz
     hblur = new THREE.ShaderPass( THREE.HorizontalBlurShader )
     vblur = new THREE.ShaderPass( THREE.VerticalBlurShader )
 
-    bluriness = 6
-    hblur.uniforms[ "h" ].value = bluriness / SCREEN_WIDTH
-    vblur.uniforms[ "v" ].value = bluriness / SCREEN_HEIGHT
+    bluriness = 1
+    hblur.uniforms[ "h" ].value = bluriness / @rendererWidth
+    vblur.uniforms[ "v" ].value = bluriness / @rendererHeight
 
     oclcomposer.addPass( hblur )
     oclcomposer.addPass( vblur )
+#     oclcomposer.addPass( hblur )
+#     oclcomposer.addPass( vblur )
 
 
 
     @grPass = new THREE.ShaderPass( THREE.Extras.Shaders.Godrays )
-    @grPass.renderToScreen = true
+    @grPass.uniforms.fExposure.value = 0.1
+
 
 
     #Prepare the composer
     oclcomposer.addPass( @grPass )
-
-
 
 
 
@@ -173,7 +177,7 @@ class Viz
 
     effectBlend = new THREE.ShaderPass( THREE.AdditiveBlendShader, "tDiffuse1" );
 
-    effectBlend.uniforms[ 'tDiffuse2' ].value = @oclcomposer.renderTexture1
+    effectBlend.uniforms[ 'tDiffuse2' ].value = renderTargetOcl
     #effectBlend.needsSwap = true
     effectBlend.renderToScreen = true;
     @finalcomposer.addPass( effectBlend );
@@ -307,7 +311,7 @@ class Viz
 #       bevelThickness: 10
 #       bevelSize: 8
     mat = new THREE.MeshPhongMaterial
-        color: 0x222222
+        color: 0x000000
     @text = new THREE.Mesh geo, mat
     @scene.add @text
     @text.position.x = -10
