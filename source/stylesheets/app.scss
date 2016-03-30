@@ -46,14 +46,14 @@ i.tracker {
 }
 
 .dataImage {
-	// width: 100%;
-	// height: 100%;
+	width: 100%;
+	height: 100%;
 	position: absolute;
 	// opacity: .5;
 
-	opacity: .085;
+	// opacity: .085;
 	z-index: 0;
-	// opacity: .2;
+	opacity: .2;
 	// -webkit-filter: contrast(50%);
 	// filter: contrast(200%);
 	// -webkit-filter: contrast(200%) brightness(200%);

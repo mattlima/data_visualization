@@ -19,18 +19,9 @@ M.node(
   .start();
 
 
-
-
- 
-
-
-
   $(document).ready(function(){
 
   	$('i').css('top', '100px');
-
-  	
-
   	startNow();
   	var display = false;
 
@@ -49,34 +40,12 @@ M.node(
 			   display = true;
 			   //return;
 			}
-			
   	});
 
 
   });
   
   function startNow(){
-  	// for(var i = 0; i < individuals.length; i+=1) {
-	  // 	val = individuals[i],
-	  // 	curTime = M.context.currentTime,
-	  // 	freqVal = val-57000,
-	  // 	visVal = freqVal/100,
-	  // 	otherVisVal = visVal + 100;
-	  // 	//range: rom 30hz up to 22000 hz
-	  // 	//44252 max: 63714
-
-	  // 	//console.log(val + ' ' + freqVal + ' ' + otherVisVal + ' ' + curTime+(i*0.25));
-	  	
-	  // 	//M.node('osc').param({frequency:val-59000, at:curTime+(i*0.25), ramp:'linear' });
-	  // 	// M.node('osc').param({frequency:freqVal, at:curTime+(i*0.25)});
-
-      
-	  // 	// ramp makes so that the transition between frequencies is gradual instead of sudden.
-	  	
-	  // }
-	  
-		//	  M.node('osc').send(d.mooogParamTarget).param("gain", 0);
-		//	 M.node('osc').param("frequency",freqVal);
 	  
 	  (function(){
 
@@ -84,11 +53,6 @@ M.node(
 	  imgCounter = 0,
 	  zIndexCounter = 53;
 
-
-
-		//log.entries.response.content.text
-
-	  	 
 	  var homelessImg = 53,
 	  homelessImgCounter = 0;
 	  	console.log(homelessImg);
@@ -97,12 +61,12 @@ M.node(
       	for (var i = homelessImg - 1; i >= 0; i--) {
       	  homelessImgCounter++;
       	  
-      	  // if (homelessImgCounter < 10) {
-      	 	// 	$('#screen').append( '<img class="dataImage" id="dataImagea'+homelessImgCounter+'" src="/img/couch/mc_0'+homelessImgCounter+'.jpg" />' );
-      	 	// } else if (homelessImgCounter >= 10 && homelessImgCounter < 38 ) {
-      	 	// 	$('#screen').append( '<img class="dataImage" id="dataImagea'+homelessImgCounter+'" src="/img/couch/mc_'+homelessImgCounter+'.jpg" />' );
-      	 	// }
-      	 	$('#screen').append( '<img class="dataImage" id="dataImagea'+homelessImgCounter+'" src="/img/a'+homelessImgCounter+'.jpg" />' );
+      	  if (homelessImgCounter < 10) {
+      	 		$('#screen').append( '<img class="dataImage" id="dataImagea'+homelessImgCounter+'" src="/img/couch/mc_0'+homelessImgCounter+'.jpg" />' );
+      	 	} else if (homelessImgCounter >= 10 && homelessImgCounter < 38 ) {
+      	 		$('#screen').append( '<img class="dataImage" id="dataImagea'+homelessImgCounter+'" src="/img/couch/mc_'+homelessImgCounter+'.jpg" />' );
+      	 	}
+      	 	// $('#screen').append( '<img class="dataImage" id="dataImagea'+homelessImgCounter+'" src="/img/a'+homelessImgCounter+'.jpg" />' );
       	 	//$('#screen').append( 'a');
       	 //	console.log(homelessImgCounter);
       	 	
@@ -111,7 +75,7 @@ M.node(
 
       };
 
-      loadImages();  
+      //loadImages();  
 
       $('body').imagesLoaded()
 		  .always( function( instance ) {
@@ -119,7 +83,7 @@ M.node(
 		  })
 		  .done( function( instance ) {
 		  	console.log('all images are loaded');
-      	setInterval(moveDot, 250);
+      	setInterval(moveDot, 125);
 		  })
 		  .fail( function() {
 		    // console.log('all images loaded, at least one is broken');
@@ -161,8 +125,8 @@ M.node(
 			  // $( '.container' ).append( '<div class="counter" style="top:' + visVal  + 'px; left:' + indCounter + 'px;">'+freqVal+'</div>' );
 			  
 
-			  if ( imgCounter <= 53 ) {
-			  //if ( imgCounter <= 37 ) {
+			  // if ( imgCounter <= 53 ) {
+			  if ( imgCounter <= 37 ) {
 
 			  	$('#dataImagea' + imgCounter).css('z-index', zIndexCounter + 1000 );
 			  	//console.log('#dataImagea' + (imgCounter));
